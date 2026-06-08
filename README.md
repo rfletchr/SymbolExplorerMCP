@@ -90,6 +90,35 @@ syms, err := extractor.ExtractPath("/path/to/file.go")
 
 `ExtractPath` returns `[]Symbol`, each with `Name`, `Kind`, `File`, `Line`, `EndLine`, `Signature`, and `Doc`.
 
+## System Prompt
+
+Add the following fragment to your LLM system prompt or `CLAUDE.md` to teach the model to use symex-mcp:
+
+```
+# Code Navigation
+
+symex-mcp extracts named declarations with signatures, doc strings, and imports.
+Prefer these tools over reading source files when exploring a codebase.
+
+If `directory_summary` is available, load all tools first:
+ToolSearch `select:directory_summary,file_summary,index,find_symbols,read_symbol,find_importers`
+
+## Workflow
+
+1. `directory_summary(root)` - one line per subdirectory with file + symbol counts; always start here
+2. `file_summary(root, glob="subdir/**")` - file-level counts, paged; use `offset`/`limit` (default 50)
+3. `index(root, glob, detail="outline"|"full")` - symbol list; outline=name+kind+line, full=+sig+doc
+4. `find_symbols(root, pattern="regex", kind?)` - regex on names; `^Foo` prefix, `(?i)foo` case-insensitive
+5. `read_symbol(root, name, detail="signature"|"full")` - fetch one symbol's declaration or full body
+6. `find_importers(root, pattern="regex")` - which files import a package; `^react`, `/extractor$`
+
+Pass `use_gitignore: true` on all calls in real projects.
+
+## Fall back to Read for
+- Non-source files (go.mod, Makefile, config, README)
+- Prose or structure between declarations
+```
+
 ## Adding a Language
 
 Define a `*LangDef` in `extractor/` and register it in `extractor/registry.go`. A `LangDef` specifies the tree-sitter grammar, file extensions, comment node types, and a list of `SymbolDef` / `ImportDef` rules. No imperative handler code is needed for most languages.
