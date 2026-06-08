@@ -1,36 +1,10 @@
 # Symbol Explorer MCP
 
-Source code symbol extractor and MCP server. Parses source files using tree-sitter and emits named declarations — functions, types, methods, constants — with signatures, doc strings, and import lists. Designed to give LLMs a compact, navigable view of a codebase without reading full file contents.
+When an LLM needs to understand an unfamiliar codebase, the naive approach is to read files. That burns tokens fast: a medium-sized project can easily exceed a context window before the model has found what it is looking for, and most of what gets read is irrelevant.
 
-## Languages
+Symbol Explorer solves this by giving the LLM a structured index instead of raw source. It parses files with tree-sitter and extracts named declarations - functions, types, methods, constants - with their signatures, doc strings, and import lists, without returning function bodies. The LLM can orient itself in a large project with a single tool call, drill into the files and symbols that matter, and only read full source when it has a specific reason to.
 
-Go, Python, Rust, C, C++, TypeScript, JavaScript
-
-## Building
-
-```sh
-make build          # current platform → dist/symex, dist/symex-mcp
-make dist-linux     # static Linux binaries via zig cc (any host with zig in PATH)
-make dist-darwin    # macOS binaries (macOS host only — requires Apple SDK)
-make test
-```
-
-## Binaries
-
-**`symex`** — CLI symbol dumper.
-
-```sh
-symex ./path/to/project          # text output grouped by file
-symex -json ./path/to/project    # JSON array of symbols
-```
-
-**`symex-mcp`** — MCP server exposing symbol extraction as tools.
-
-```sh
-symex-mcp                        # stdio transport (default)
-symex-mcp -http                  # HTTP transport on :3002
-symex-mcp -http -addr :8080      # custom address
-```
+It ships as a Go library, a CLI tool (`symex`), and an MCP server (`symex-mcp`) with six navigation tools designed around the way LLMs actually explore code.
 
 ## MCP Tools
 
@@ -45,6 +19,37 @@ symex-mcp -http -addr :8080      # custom address
 
 All tools accept `root` (required), `use_gitignore`, and `glob` parameters.
 
+## Languages
+
+Go, Python, Rust, C, C++, TypeScript, JavaScript
+
+## Building
+
+```sh
+make build          # current platform, outputs to dist/
+make dist-linux     # static Linux binaries via zig cc (any host with zig in PATH)
+make dist-darwin    # macOS binaries (macOS host only, requires Apple SDK)
+make test
+```
+
+## Binaries
+
+**`symex`** - CLI symbol dumper.
+
+```sh
+symex ./path/to/project          # text output grouped by file
+symex -json ./path/to/project    # JSON array of symbols
+```
+
+**`symex-mcp`** - MCP server exposing symbol extraction as tools.
+
+```sh
+symex-mcp                        # stdio transport (default)
+symex-mcp -http                  # HTTP transport on :3002
+symex-mcp -http -addr :8080      # custom address
+```
+
+
 ## Library
 
 ```go
@@ -53,7 +58,7 @@ import "indexmcp/symex/extractor"
 syms, err := extractor.ExtractPath("/path/to/file.go")
 ```
 
-`ExtractPath` returns `[]Symbol` — each with `Name`, `Kind`, `File`, `Line`, `EndLine`, `Signature`, and `Doc`.
+`ExtractPath` returns `[]Symbol`, each with `Name`, `Kind`, `File`, `Line`, `EndLine`, `Signature`, and `Doc`.
 
 ## Adding a Language
 
@@ -63,4 +68,4 @@ See `extractor/go_lang.go` for a representative example.
 
 ## Cross-compilation
 
-Linux targets are fully static musl binaries built via `zig cc` and can be cross-compiled from any platform. macOS targets require the Apple SDK and must be built on a macOS host (or macOS CI runner).
+Linux targets are fully static musl binaries built via `zig cc` and can be cross-compiled from any platform. macOS targets require the Apple SDK and must be built on a macOS host or macOS CI runner.
