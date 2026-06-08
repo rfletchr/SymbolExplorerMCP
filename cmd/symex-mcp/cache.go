@@ -4,7 +4,7 @@ import (
 	"sync"
 	"time"
 
-	"indexmcp/symex/extractor"
+	"github.com/rfletchr/SymbolExplorerMCP/extractor"
 )
 
 type cacheEntry struct {

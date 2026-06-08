@@ -15,12 +15,12 @@ import (
 
 	minimcp "github.com/rfletchr/MiniMCP"
 
-	"indexmcp/symex/extractor"
+	"github.com/rfletchr/SymbolExplorerMCP/extractor"
 )
 
 func main() {
 	d := minimcp.NewDispatcher()
-	s := minimcp.NewServer("indexmcp", "0.1.0")
+	s := minimcp.NewServer("symex-mcp", "0.1.0")
 
 	sharedProps := minimcp.Properties{
 		"root":          {Type: "string", Description: "Absolute path to the project root directory or a single file."},
@@ -157,7 +157,7 @@ func main() {
 
 	if *useHTTP {
 		http.Handle("/mcp", minimcp.NewHTTPHandler(d))
-		log.Printf("indexmcp listening on %s", *addr)
+		log.Printf("symex-mcp listening on %s", *addr)
 		if err := http.ListenAndServe(*addr, nil); err != nil {
 			log.Fatal(err)
 		}

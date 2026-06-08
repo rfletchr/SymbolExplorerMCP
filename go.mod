@@ -1,4 +1,4 @@
-module indexmcp/symex
+module github.com/rfletchr/SymbolExplorerMCP
 
 go 1.26.3
 

@@ -83,7 +83,7 @@ symex-mcp -http -addr :8080      # custom address
 ## Library
 
 ```go
-import "indexmcp/symex/extractor"
+import "github.com/rfletchr/SymbolExplorerMCP/extractor"
 
 syms, err := extractor.ExtractPath("/path/to/file.go")
 ```

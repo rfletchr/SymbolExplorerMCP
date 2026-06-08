@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"indexmcp/symex/extractor"
+	"github.com/rfletchr/SymbolExplorerMCP/extractor"
 )
 
 func main() {
