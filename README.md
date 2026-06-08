@@ -1,4 +1,4 @@
-# symex
+# Symbol Explorer MCP
 
 Source code symbol extractor and MCP server. Parses source files using tree-sitter and emits named declarations — functions, types, methods, constants — with signatures, doc strings, and import lists. Designed to give LLMs a compact, navigable view of a codebase without reading full file contents.
 
