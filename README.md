@@ -37,8 +37,38 @@ make test
 **`symex`** - CLI symbol dumper.
 
 ```sh
-symex ./path/to/project          # text output grouped by file
-symex -json ./path/to/project    # JSON array of symbols
+$ symex cmd/symex-mcp/glob.go
+
+// cmd/symex-mcp/glob.go
+import     path/filepath
+import     strings
+function   func matchGlob(pattern, path string) bool
+           // matchGlob reports whether the slash-separated relative path matches pattern.
+           // Supports * (within a segment) and ** (across segments).
+```
+
+```sh
+$ symex -json cmd/symex-mcp/glob.go
+
+[
+  {
+    "name": "path/filepath",
+    "kind": "import",
+    "file": "cmd/symex-mcp/glob.go",
+    "line": 4,
+    "end_line": 4,
+    "signature": "path/filepath"
+  },
+  {
+    "name": "matchGlob",
+    "kind": "function",
+    "file": "cmd/symex-mcp/glob.go",
+    "line": 10,
+    "end_line": 49,
+    "signature": "func matchGlob(pattern, path string) bool",
+    "doc": "// matchGlob reports whether the slash-separated relative path matches pattern.\n// Supports * (within a segment) and ** (across segments)."
+  }
+]
 ```
 
 **`symex-mcp`** - MCP server exposing symbol extraction as tools.
