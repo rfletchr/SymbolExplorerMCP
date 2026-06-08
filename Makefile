@@ -55,9 +55,7 @@ dist-linux: \
 	$(DIST)/symex-linux-arm64
 
 dist-darwin: \
-	$(DIST)/symex-mcp-darwin-amd64 \
 	$(DIST)/symex-mcp-darwin-arm64 \
-	$(DIST)/symex-darwin-amd64     \
 	$(DIST)/symex-darwin-arm64
 
 $(DIST)/symex-mcp-linux-amd64: ; $(call zigbuild,linux,amd64,x86_64-linux-musl,$@,./cmd/symex-mcp)
@@ -65,9 +63,7 @@ $(DIST)/symex-mcp-linux-arm64: ; $(call zigbuild,linux,arm64,aarch64-linux-musl,
 $(DIST)/symex-linux-amd64:     ; $(call zigbuild,linux,amd64,x86_64-linux-musl,$@,./cmd/symex)
 $(DIST)/symex-linux-arm64:     ; $(call zigbuild,linux,arm64,aarch64-linux-musl,$@,./cmd/symex)
 
-$(DIST)/symex-mcp-darwin-amd64: ; $(call gobuild,darwin,amd64,$@,./cmd/symex-mcp)
 $(DIST)/symex-mcp-darwin-arm64: ; $(call gobuild,darwin,arm64,$@,./cmd/symex-mcp)
-$(DIST)/symex-darwin-amd64:     ; $(call gobuild,darwin,amd64,$@,./cmd/symex)
 $(DIST)/symex-darwin-arm64:     ; $(call gobuild,darwin,arm64,$@,./cmd/symex)
 
 dist-windows: \

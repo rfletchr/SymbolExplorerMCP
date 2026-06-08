@@ -22,15 +22,8 @@ jobs:
           path: dist/
 
   build-darwin:
-    name: macOS (${{ matrix.goarch }})
-    runs-on: ${{ matrix.runner }}
-    strategy:
-      matrix:
-        include:
-          - runner: macos-13
-            goarch: amd64
-          - runner: macos-latest
-            goarch: arm64
+    name: macOS (arm64)
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
@@ -39,7 +32,7 @@ jobs:
       - run: ./scripts/build-darwin.sh
       - uses: actions/upload-artifact@v4
         with:
-          name: dist-darwin-${{ matrix.goarch }}
+          name: dist-darwin
           path: dist/
 
   release:
